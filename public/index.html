@@ -23,6 +23,7 @@
 	<button v-on:click="showActive()">Show Active</button>
 	<button v-on:click="showCompleted()">Show Completed</button>
 	<button v-on:click="deleteCompleted()">Delete Completed</button>
+	<button v-on:click="sortByPriority()">Sort By Priority</button>
       </div>
       <ul>
 	<li v-for="item in filteredItems" draggable="true" v-on:dragstart="dragItem(item)" v-on:dragover.prevent v-on:drop="dropItem(item)">

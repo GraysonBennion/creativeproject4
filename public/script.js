@@ -32,7 +32,7 @@ var app = new Vue({
     },
     methods: {
 	addItem: function() {
-	    axios.post("http://localhost:3000/api/items", {
+	    axios.post("/api/items", {
 		text: this.text,
 		completed: false,
 		priority: this.priority
@@ -45,7 +45,7 @@ var app = new Vue({
 	    });
 	},
 	completeItem: function(item) {
-	    axios.put("http://localhost:3000/api/items/" + item.id, {
+	    axios.put("/api/items/" + item.id, {
 		text: item.text,
 		completed: !item.completed,
 		orderChange: false,
@@ -56,7 +56,7 @@ var app = new Vue({
 	    });
 	},
 	deleteItem: function(item) {
-	    axios.delete("http://localhost:3000/api/items/" + item.id).then(response => {
+	    axios.delete("/api/items/" + item.id).then(response => {
 		this.getItems();
 		return true;
 	    }).catch(err => {
@@ -81,7 +81,7 @@ var app = new Vue({
 	    this.drag = item;
 	},
 	dropItem: function(item) {
-	    axios.put("http://localhost:3000/api/items/" + this.drag.id, {
+	    axios.put("/api/items/" + this.drag.id, {
 		text: this.drag.text,
 		completed: this.drag.completed,
 		orderChange: true,
@@ -94,20 +94,72 @@ var app = new Vue({
 	    });
 	},
 	getItems: function() {
-	    axios.get("http://localhost:3000/api/items").then(response => {
+	    axios.get("/api/items").then(response => {
 		this.items = response.data;
 		return true;
 	    }).catch(err => {
 	    });
 	},
-	increasePriority: function() {
-
+	increasePriority: function(item) {
+	    if(item.priority === "high"){}
+	    else{
+		var newpriority;
+		if(item.priority ==="low")
+		    newpriority = "medium";
+		if(item.priority ==="medium")
+		    newpriority = "high";
+		axios.put("/api/items/" + item.id, {
+		    text: item.text,
+		    completed: item.completed,
+		    orderChange: false,
+		    priority: newpriority
+		}).then(response => {
+		    return true;
+		}).catch(err => {
+		});
+		this.getItems();
+	    }
 	},
-	decreasePriority: function() {
-
+	decreasePriority: function(item) {
+	    if(item.priority === "low"){}
+	    else{
+		var newpriority;
+		if(item.priority ==="high")
+		    newpriority = "medium";
+		if(item.priority ==="medium")
+		    newpriority = "low";
+		axios.put("/api/items/" + item.id, {
+		    text: item.text,
+		    completed: item.completed,
+		    orderChange: false,
+		    priority: newpriority
+		}).then(response => {
+		    return true;
+		}).catch(err => {
+		});
+		this.getItems();
+	    }
 	},
 	sortByPriority: function() {
-
+	    this.items.sort(function(a, b) {
+		var one = 0;
+		var two = 0;
+		a = a.priority;
+		b = b.priority;
+		if(a === "high")
+		    one = 3;
+		if(a === "medium")
+		    one = 2;
+		if(a === "low")
+		    one = 1;
+		if(b === "high")
+		    two = 3;
+		if(b === "medium")
+		    two = 2;
+		if(b === "low")
+		    two = 1;
+		return (two - one);
+	    });
 	},
     }
 });
