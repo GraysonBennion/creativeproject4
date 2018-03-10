@@ -5,15 +5,16 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(express.static('public'))
+app.use(express.static('public'));
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 let items = [];
 let id = 0;
-
-app.use(function(req, res) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.send();
-});
 
 app.get('/api/items', (req, res) => {
     res.send(items);
