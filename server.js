@@ -1,17 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors({credentials: true, origin: true}));
 
-app.use(express.static('public'));
-
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+app.use(express.static('public'))
 
 let items = [];
 let id = 0;
@@ -22,7 +18,7 @@ app.get('/api/items', (req, res) => {
 
 app.post('/api/items', (req, res) => {
     id = id + 1;
-    let item = {id:id, text:req.body.text, completed: req.body.completed};
+    let item = {id:id, text:req.body.text, priority: req.body.priority, completed: req.body.completed};
     items.push(item);
     res.send(item);
 });
@@ -34,6 +30,7 @@ app.put('/api/items/:id', (req, res) => {
     let item = items[index];
     item.completed = req.body.completed;
     item.text = req.body.text;
+    item.priority = req.body.priority;
     res.send(item);
 });
 
@@ -55,6 +52,7 @@ app.put('/api/items/:id', (req, res) => {
     let item = items[index];
     item.completed = req.body.completed;
     item.text = req.body.text;
+    item.priority = req.body.priority;
     // handle drag and drop re-ordering
     if (req.body.orderChange) {
 	let indexTarget = itemsMap.indexOf(req.body.orderTarget);

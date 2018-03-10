@@ -11,6 +11,11 @@
       <p v-show="activeItems.length === 0">You are done with all your tasks! Good job!</p>
       <form v-on:submit.prevent="addItem">
 	<input type="text" v-model="text">
+	<select v-model="priority">
+	  <option>high</option>
+	  <option>medium</option>
+	  <option>low</option>
+	</select>
 	<button type="submit">Add</button>
       </form>
       <div class="controls">
@@ -21,7 +26,12 @@
       </div>
       <ul>
 	<li v-for="item in filteredItems" draggable="true" v-on:dragstart="dragItem(item)" v-on:dragover.prevent v-on:drop="dropItem(item)">
-	  <input type="checkbox" v-model="item.completed" v-on:click="completeItem(item)" /><label v-bind:class="{ completed: item.completed }">{{ item.text }}</label><button v-on:click="deleteItem(item)" class="delete">X</button>
+	  <input type="checkbox" v-model="item.completed" v-on:click="completeItem(item)" />
+	  <label v-bind:class="{ completed: item.completed }">{{ item.text }}</label>
+	  <label v-bind:class="{ completed: item.completed }">{{ item.priority }}</label>
+	  <button v-on:click="increasePriority(item)" class="delete">Priority Up</button>
+	  <button v-on:click="decreasePriority(item)" class="delete">Priority Down</button>
+	  <button v-on:click="deleteItem(item)" class="delete">X</button>
 	</li>
       </ul>
     </div>

@@ -3,6 +3,7 @@ var app = new Vue({
     data: {
 	items: [],
 	text: '',
+	priority: 'high',
 	show: 'all',
 	drag: {}
     },
@@ -33,9 +34,11 @@ var app = new Vue({
 	addItem: function() {
 	    axios.post("http://localhost:3000/api/items", {
 		text: this.text,
-		completed: false
+		completed: false,
+		priority: this.priority
 	    }).then(response => {
 		this.text = "";
+		this.priority = "high";
 		this.getItems();
 		return true;
 	    }).catch(err => {
@@ -46,6 +49,7 @@ var app = new Vue({
 		text: item.text,
 		completed: !item.completed,
 		orderChange: false,
+		priority: item.priority
 	    }).then(response => {
 		return true;
 	    }).catch(err => {
@@ -81,7 +85,8 @@ var app = new Vue({
 		text: this.drag.text,
 		completed: this.drag.completed,
 		orderChange: true,
-		orderTarget: item.id
+		orderTarget: item.id,
+		priority: this.drag.priority
 	    }).then(response => {
 		this.getItems();
 		return true;
@@ -94,6 +99,15 @@ var app = new Vue({
 		return true;
 	    }).catch(err => {
 	    });
+	},
+	increasePriority: function() {
+
+	},
+	decreasePriority: function() {
+
+	},
+	sortByPriority: function() {
+
 	},
     }
 });
