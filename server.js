@@ -14,6 +14,12 @@ app.get('/api/items', (req, res) => {
     res.send(items);
 });
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 app.post('/api/items', (req, res) => {
     id = id + 1;
     let item = {id:id, text:req.body.text, completed: req.body.completed};
