@@ -23,17 +23,6 @@ app.post('/api/items', (req, res) => {
     res.send(item);
 });
 
-app.put('/api/items/:id', (req, res) => {
-    let id = parseInt(req.params.id);
-    let itemsMap = items.map(item => { return item.id; });
-    let index = itemsMap.indexOf(id);
-    let item = items[index];
-    item.completed = req.body.completed;
-    item.text = req.body.text;
-    item.priority = req.body.priority;
-    res.send(item);
-});
-
 app.delete('/api/items/:id', (req, res) => {
     let id = parseInt(req.params.id);
     let removeIndex = items.map(item => { return item.id; }).indexOf(id);

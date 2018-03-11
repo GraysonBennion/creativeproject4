@@ -5,7 +5,9 @@ var app = new Vue({
 	text: '',
 	priority: 'high',
 	show: 'all',
-	drag: {}
+	drag: {},
+	orderChange:false,
+	orderTarget:0
     },
     
     created: function() {
