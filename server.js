@@ -1,21 +1,40 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors({credentials: true, origin: true}));
 
 app.use(express.static('public'))
 
-let items = [];
-let id = 0;
+var card1 = 'pikachu.png';
+var card2 = 'pikachu.png';
+var card3 = 'pikachu.png';
 
-app.get('/api/items', (req, res) => {
-    res.send(items);
+
+app.get('/api/cards', (req, res) => {
+    var array = []
+    array.push(card1);
+    array.push(card2);
+    array.push(card3);
+    res.send(array);
 });
 
+app.put('/api/card1', (req,res) => {
+	card1 = req.body.path;
+	res.send(card1);
+});
+
+app.put('/api/card2', (req,res) => {
+	card2 = req.body.path;
+	res.send(card2);
+});
+
+app.put('/api/card3', (req,res) => {
+	card3 = req.body.path;
+	res.send(card3);
+});
+/*
 app.post('/api/items', (req, res) => {
     id = id + 1;
     let item = {id:id, text:req.body.text, priority: req.body.priority, completed: req.body.completed};
@@ -50,5 +69,6 @@ app.put('/api/items/:id', (req, res) => {
     }
     res.send(item);
 });
+*/
 
 app.listen(3000, () => console.log('Server listening on port 3000!'))

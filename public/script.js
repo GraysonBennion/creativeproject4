@@ -1,38 +1,77 @@
 var app = new Vue({
     el: '#app',
     data: {
-	items: [],
-	text: '',
-	priority: 'high',
-	show: 'all',
-	drag: {},
-	orderChange:false,
-	orderTarget:0
-    },
+    	card1: '',
+    	card2: '',
+    	card3: '',
+    	defaultimg: '/pikachu.png',
+    	currentimg: '',
+    	current: ["pikachu.png"],
+    	input: '',
+    	selected: "card1",
+    	url: '',
+	},
     
     created: function() {
-	this.getItems();
+		this.startState();
     },
-    
-    computed: {
-	activeItems: function() {
-	    return this.items.filter(function(item) {
-		return !item.completed;
-	    });
-    },
-	filteredItems: function() {
-	    if (this.show === 'active')
-		return this.items.filter(function(item) {
-		    return !item.completed;
-		});
-	    if (this.show === 'completed')
-		return this.items.filter(function(item) {
-		    return item.completed;
-		});
-	    return this.items;
-	},
-    },
+
     methods: {
+   	startState: function() {
+   		axios.get("/api/cards").then(response => {
+   			this.card1 = response.data[0];
+   			this.card2 = response.data[1];
+   			this.card3 = response.data[2];
+   			return true;
+	    }).catch(err => {
+	    });
+   	},
+
+   	updatePics: function() {
+ 		var list = document.getElementById('cards');
+ 		list.innerHTML = '';
+ 		for(var i=0;i<current.length;i++){
+ 			var newdiv = document.createElement("button");
+ 			newdiv.setAttribute("onclick", "app.selectImage(\"" + current[i] + "\")");
+ 			var newimage = document.createElement("img");
+ 			newimage.src= current[i];
+ 			newdiv.appendChild(newimage);
+ 			list.appendChild(newdiv);
+ 		}
+ 	},
+
+   	search: function() {
+   		axios.get("https://api.pokemontcg.io/v1/cards?name=" + this.input).then(
+   			response => {
+   				current = [];
+   				for(var i=0;i<response.data.cards.length;i++){
+   					current.push(response.data.cards[i].imageUrl);
+   				}
+   				this.updatePics();
+   			});
+   		  	
+   	},
+
+   	selectImage: function(url) {
+   		axios.put(("api/" + this.selected), {
+   			path: url,
+   		}).then(response => {
+   			return true;
+   		}).catch(err => {
+
+   		});
+   		this.startState();
+   	},
+
+   	select: function(cardnumber) {
+   		var currentcard = document.getElementById(this.selected);
+   		currentcard.setAttribute("class", "card");
+   		this.selected = "card" + cardnumber;
+   		currentcard = document.getElementById(this.selected);
+   		currentcard.setAttribute("class", "card selected");
+   	},
+
+   	/*
 	addItem: function() {
 	    axios.post("/api/items", {
 		text: this.text,
@@ -163,5 +202,6 @@ var app = new Vue({
 		return (two - one);
 	    });
 	},
+	*/
     }
 });
